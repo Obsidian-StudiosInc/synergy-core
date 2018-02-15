@@ -45,14 +45,14 @@ ClientListener::ClientListener(const NetworkAddress& address,
     assert(m_socketFactory != NULL);
 
     try {
-        m_listen = m_socketFactory->createListen(m_useSecureNetwork);
+        m_listen = m_socketFactory->createListen(m_useSecureNetwork, ARCH->getAddrFamily(address.getAddress()));
 
         // setup event handler
         m_events->adoptHandler(m_events->forIListenSocket().connecting(),
                     m_listen,
                     new TMethodEventJob<ClientListener>(this,
                             &ClientListener::handleClientConnecting));
-        
+
         // bind listen address
         LOG((CLOG_DEBUG1 "binding listen socket"));
         m_listen->bind(address);
